@@ -304,7 +304,7 @@ def main(argv):
     check(doc)
     for fill, text in short_last_lines(doc):
         print(f"WARN last line ~{fill}% full, reword: {text[:50]}")
-    stem = f"Chatshop_บทที่{chapter}_{title.replace(' ', '')}"
+    stem = f"Asset_บทที่{chapter}_{title.replace(' ', '')}"
     out = os.path.join(ROOT, "output", stem + ".docx")
     try:
         doc.save(out)

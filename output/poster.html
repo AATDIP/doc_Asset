@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>โปสเตอร์นำเสนอโครงงาน - ระบบบริหารจัดการสินทรัพย์ (Asset Management)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ================= GLOBAL & PRINT SETUP ================= */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    @page {
+      size: A3 portrait;
+      margin: 0;
+    }
+    
+    body {
+      background-color: #64748b;
+      font-family: 'Sarabun', sans-serif;
+      color: #1e293b;
+      line-height: 1.45;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 0;
+    }
+
+    /* Print control button */
+    .print-bar {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 9999;
+      background: #1e293b;
+      padding: 8px 16px;
+      border-radius: 999px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      display: flex;
+      gap: 12px;
+    }
+    .print-btn {
+      background: #ea580c;
+      color: #fff;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .print-btn:hover { background: #c2410c; }
+
+    /* ================= POSTER CANVAS (A3 Ratio) ================= */
+    .poster {
+      width: 1000px;
+      min-height: 1414px;
+      background: #ffffff;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ================= HEADER ================= */
+    .header {
+      position: relative;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      padding: 16px 24px 8px;
+      border-bottom: 3px solid #ea580c;
+    }
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .logo-box {
+      width: 82px;
+      height: 82px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid #ea580c;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      flex-shrink: 0;
+    }
+    .logo-box svg { width: 100%; height: 100%; }
+
+    .header-univ-title {
+      text-align: center;
+      flex: 1;
+      padding: 0 16px;
+    }
+    .univ-th {
+      font-family: 'Kanit', sans-serif;
+      font-size: 27px;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.01em;
+    }
+    .univ-en {
+      font-family: 'Kanit', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: #ea580c;
+      letter-spacing: 0.02em;
+    }
+
+    /* Project Title Banner */
+    .title-banner {
+      background: linear-gradient(135deg, #7c2d12 0%, #9a3412 50%, #c2410c 100%);
+      color: #ffffff;
+      padding: 14px 24px;
+      border-radius: 14px;
+      text-align: center;
+      box-shadow: 0 6px 16px rgba(154, 52, 18, 0.25);
+      margin-bottom: 10px;
+    }
+    .proj-title-th {
+      font-family: 'Kanit', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      line-height: 1.25;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .proj-title-en {
+      font-family: 'Kanit', sans-serif;
+      font-size: 17px;
+      font-weight: 400;
+      color: #fed7aa;
+      margin-top: 4px;
+      letter-spacing: 0.01em;
+    }
+
+    /* Student Info Bar */
+    .student-bar {
+      background: #fef3c7;
+      border: 1px solid #fde68a;
+      border-radius: 10px;
+      padding: 8px 18px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      font-family: 'Kanit', sans-serif;
+      font-size: 15px;
+      color: #78350f;
+    }
+    .student-bar b { color: #9a3412; font-weight: 600; }
+
+    /* ================= MAIN CONTENT ================= */
+    .main-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 46% 54%;
+      gap: 16px;
+      padding: 16px 20px;
+      background: #f8fafc;
+    }
+
+    /* Section Component */
+    .section-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+    .sec-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #0d9488;
+      color: #ffffff;
+      padding: 5px 16px;
+      border-radius: 999px;
+      font-family: 'Kanit', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 5px rgba(13, 148, 136, 0.25);
+    }
+    .sec-header.orange { background: #ea580c; box-shadow: 0 2px 5px rgba(234, 88, 12, 0.25); }
+    .sec-header svg { width: 18px; height: 18px; fill: currentColor; }
+
+    /* Abstract Text */
+    .text-body {
+      font-size: 13.5px;
+      text-align: justify;
+      color: #334155;
+      line-height: 1.5;
+    }
+
+    /* List Items */
+    ul.check-list {
+      list-style: none;
+      padding-left: 2px;
+    }
+    ul.check-list li {
+      position: relative;
+      padding-left: 20px;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: #334155;
+      line-height: 1.45;
+    }
+    ul.check-list li::before {
+      content: "";
+      position: absolute;
+      left: 2px;
+      top: 6px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #0d9488;
+    }
+
+    /* Highlight Badges */
+    .badge-highlight {
+      display: inline-block;
+      background: #e0f2fe;
+      color: #0369a1;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    /* Results Chart Simulation */
+    .chart-container {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 6px;
+    }
+    .chart-legend {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      font-size: 12px;
+      font-family: 'Kanit', sans-serif;
+      margin-bottom: 8px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .dot-old { width: 12px; height: 12px; background: #ea580c; border-radius: 3px; }
+    .dot-new { width: 12px; height: 12px; background: #0d9488; border-radius: 3px; }
+
+    .chart-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .bar-row {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .bar-label { font-size: 12px; font-weight: 600; color: #475569; display: flex; justify-content: space-between; }
+    .bar-track {
+      background: #e2e8f0;
+      border-radius: 6px;
+      height: 16px;
+      overflow: hidden;
+      display: flex;
+    }
+    .bar-fill {
+      height: 100%;
+      font-size: 10.5px;
+      color: #fff;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      padding-left: 8px;
+      transition: width 1s ease;
+    }
+    .bar-old { background: #ea580c; }
+    .bar-new { background: #0d9488; }
+
+    /* ================= METHODOLOGY 12 STEPS ================= */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .step-card {
+      background: #f0fdfa;
+      border: 1px solid #99f6e4;
+      border-radius: 8px;
+      padding: 8px 6px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #0d9488;
+      color: #fff;
+      font-family: 'Kanit', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 4px;
+    }
+    .step-title {
+      font-family: 'Kanit', sans-serif;
+      font-size: 11.5px;
+      font-weight: 600;
+      color: #115e59;
+      line-height: 1.25;
+    }
+    .step-desc {
+      font-size: 10px;
+      color: #4b5563;
+      margin-top: 2px;
+      line-height: 1.2;
+    }
+
+    /* Screenshots Grid */
+    .screenshots-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .shot-box {
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #f1f5f9;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .shot-img-mockup {
+      width: 100%;
+      height: 115px;
+      border-radius: 6px;
+      background: #1e293b;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    }
+    .mockup-topbar {
+      height: 18px;
+      background: #334155;
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      gap: 4px;
+    }
+    .mockup-dot { width: 6px; height: 6px; border-radius: 50%; background: #94a3b8; }
+    .mockup-dot.r { background: #ef4444; }
+    .mockup-dot.y { background: #f59e0b; }
+    .mockup-dot.g { background: #10b981; }
+    .mockup-content {
+      flex: 1;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      color: #e2e8f0;
+      font-size: 9.5px;
+      font-family: monospace;
+    }
+    .mockup-row { display: flex; gap: 6px; }
+    .mockup-card { background: #0f172a; border: 1px solid #475569; border-radius: 4px; flex: 1; padding: 4px; }
+    .mockup-table { width: 100%; border-collapse: collapse; font-size: 8px; }
+    .mockup-table th { background: #0d9488; color: #fff; padding: 2px 4px; text-align: left; }
+    .mockup-table td { border-bottom: 1px solid #334155; padding: 2px 4px; color: #cbd5e1; }
+    .shot-caption {
+      font-family: 'Kanit', sans-serif;
+      font-size: 11.5px;
+      font-weight: 500;
+      color: #334155;
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    /* ================= FOOTER ================= */
+    .footer {
+      background: #ffffff;
+      border-top: 3px solid #0d9488;
+      display: grid;
+      grid-template-columns: 55% 45%;
+      padding: 12px 24px;
+      align-items: center;
+    }
+    .footer-org {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .org-logo-circle {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      border: 2px solid #0d9488;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #0d9488;
+    }
+    .org-info {
+      font-size: 13px;
+      line-height: 1.4;
+      color: #334155;
+    }
+    .org-info b { color: #0f172a; font-family: 'Kanit', sans-serif; font-size: 14.5px; }
+
+    .footer-student {
+      background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(13, 148, 136, 0.25);
+    }
+    .student-meta {
+      font-size: 12.5px;
+    }
+    .student-meta .name {
+      font-family: 'Kanit', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .student-meta .role {
+      color: #99f6e4;
+      font-weight: 500;
+    }
+    .student-meta .email {
+      font-size: 11.5px;
+      color: #e6fffa;
+    }
+
+    /* Print settings */
+    @media print {
+      body { padding: 0; background: none; }
+      .print-bar { display: none; }
+      .poster { box-shadow: none; width: 100%; min-height: 100vh; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Print Controls -->
+  <div class="print-bar">
+    <button class="print-btn" onclick="window.print()">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2m-10 0v4h8v-4H8z"/></svg>
+      พิมพ์โปสเตอร์ / บันทึก PDF (A3)
+    </button>
+  </div>
+
+  <div class="poster">
+
+    <!-- ================= HEADER SECTION ================= -->
+    <header class="header">
+      <div class="header-top">
+        <!-- Faculty Logo -->
+        <div class="logo-box" title="คณะวิศวกรรมศาสตร์ มทร.อีสาน ขอนแก่น">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="46" fill="#7c2d12" stroke="#ea580c" stroke-width="3"/>
+            <circle cx="50" cy="50" r="38" fill="#ffffff"/>
+            <path d="M50 20 L65 48 L35 48 Z" fill="#c2410c"/>
+            <text x="50" y="68" font-size="11" font-family="'Kanit', sans-serif" font-weight="700" fill="#7c2d12" text-anchor="middle">ENG RMUTI</text>
+            <text x="50" y="80" font-size="8" font-family="'Kanit', sans-serif" fill="#64748b" text-anchor="middle">KHON KAEN</text>
+          </svg>
+        </div>
+
+        <!-- University Titles -->
+        <div class="header-univ-title">
+          <div class="univ-th">มหาวิทยาลัยเทคโนโลยีราชมงคลอีสาน วิทยาเขตขอนแก่น</div>
+          <div class="univ-en">Rajamangala University of Technology Isan KhonKaen Campus</div>
+        </div>
+
+        <!-- RMUTI Emblem Logo -->
+        <div class="logo-box" title="มทร.อีสาน">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="46" fill="#0d9488" stroke="#14b8a6" stroke-width="3"/>
+            <circle cx="50" cy="50" r="38" fill="#ffffff"/>
+            <path d="M50 16 L68 46 L32 46 Z" fill="#0f766e"/>
+            <text x="50" y="68" font-size="10" font-family="'Kanit', sans-serif" font-weight="700" fill="#0f766e" text-anchor="middle">มทร.อีสาน</text>
+            <text x="50" y="80" font-size="8" font-family="'Kanit', sans-serif" fill="#64748b" text-anchor="middle">KKC 1964</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Project Title Banner -->
+      <div class="title-banner">
+        <div class="proj-title-th">ระบบบริหารจัดการสินทรัพย์ (Asset Management)</div>
+        <div class="proj-title-en">Web-Based Asset Management System for Faculty of Medicine</div>
+      </div>
+
+      <!-- Student Credentials Banner -->
+      <div class="student-bar">
+        <div><b>ผู้จัดทำ:</b> นายอดิเทพ [...] / นายนครินทร์ มานิล / นายวีระพล สังข์ทอง</div>
+        <div><b>รหัสนักศึกษา:</b> 66332310xxx-x</div>
+        <div><b>สาขาวิชา:</b> วิศวกรรมคอมพิวเตอร์</div>
+        <div><b>คณะ:</b> วิศวกรรมศาสตร์</div>
+      </div>
+    </header>
+
+    <!-- ================= MAIN BODY ================= -->
+    <main class="main-body">
+
+      <!-- LEFT COLUMN -->
+      <div class="col-left">
+
+        <!-- 1. บทคัดย่อ -->
+        <section class="section-card">
+          <div class="sec-header">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zM13 9V3.5L18.5 9H13z"/></svg>
+            บทคัดย่อ
+          </div>
+          <p class="text-body">
+            โครงงานนี้จัดทำขึ้นเพื่อพัฒนา<b>ระบบบริหารจัดการสินทรัพย์ (Asset Management)</b> ในรูปแบบเว็บแอปพลิเคชัน สำหรับคณะแพทยศาสตร์ โรงพยาบาลศรีนครินทร์ มหาวิทยาลัยขอนแก่น เพื่อแก้ไขปัญหาคอขวดในการสืบค้นข้อมูลครุภัณฑ์ที่เดิมจำกัดสิทธิ์เฉพาะแผนกพัสดุส่วนกลาง โดยผู้จัดทำรับผิดชอบพัฒนาในส่วนของ<b>ส่วนต่อประสานผู้ใช้ (Frontend)</b> ด้วย EJS, Bootstrap 5 และ Node.js/Express รองรับการแสดงผลตารางครุภัณฑ์ขนาดใหญ่พร้อม Sticky Header การโอนย้ายสินทรัพย์ระหว่างแผนกแบบกลุ่ม การสร้างและจัดพิมพ์ป้ายสติกเกอร์ QR Code ขนาด 70×24 มม. และรองรับระบบ Light/Dark Mode (Anti-FOUC)
+          </p>
+        </section>
+
+        <!-- 2. วัตถุประสงค์ -->
+        <section class="section-card">
+          <div class="sec-header">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+            วัตถุประสงค์
+          </div>
+          <ul class="check-list">
+            <li>เพื่อพัฒนาระบบบริหารจัดการสินทรัพย์ในรูปแบบเว็บแอปพลิเคชัน สำหรับคณะแพทยศาสตร์ โรงพยาบาลศรีนครินทร์ มหาวิทยาลัยขอนแก่น</li>
+            <li>เพื่อออกแบบและพัฒนาส่วนต่อประสานผู้ใช้ (Frontend) รองรับตารางข้อมูลขนาดใหญ่ (Sticky Header), การโอนย้ายสินทรัพย์แบบกลุ่ม และการพิมพ์ป้าย QR Code</li>
+            <li>เพื่อพัฒนาระบบส่วนติดต่อผู้ใช้ที่รองรับ Responsive Design, รองรับโหมด Light/Dark Mode โดยไม่มีหน้าจอกระพริบ (Anti-FOUC) และระบบสองภาษา (i18n)</li>
+          </ul>
+        </section>
+
+        <!-- 3. ประโยชน์ที่ได้รับ -->
+        <section class="section-card">
+          <div class="sec-header">
+            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            ประโยชน์ที่ได้รับ
+          </div>
+          <ul class="check-list">
+            <li><b>ลดเวลาการสืบค้นและรอคอยข้อมูลสินทรัพย์ลงได้มากกว่า 75%</b> บุคลากรแต่ละแผนกสามารถตรวจสอบสถานะครุภัณฑ์ในความดูแลได้โดยตรงแบบเรียลไทม์</li>
+            <li><b>ลดภาระงานและความซ้ำซ้อนของเจ้าหน้าที่แผนกพัสดุ</b> ในการรับเรื่อง ตอบคำถาม และค้นหาประวัติครุภัณฑ์ย้อนหลัง</li>
+            <li><b>เพิ่มความโปร่งใสและแม่นยำในการโอนย้ายครุภัณฑ์</b> ตรวจสอบย้อนหลังได้ผ่าน Activity Logs และป้าย QR Code มาตรฐาน</li>
+          </ul>
+        </section>
+
+        <!-- 4. ผลการดำเนินงาน -->
+        <section class="section-card">
+          <div class="sec-header orange">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+            ผลการดำเนินงาน (การทำงานจริงของเว็บแอปพลิเคชัน)
+          </div>
+          
+          <div style="font-size:12.5px; color:#475569; margin-bottom:8px; line-height:1.4;">
+            จากการพัฒนาส่วนต่อประสานผู้ใช้ (Frontend) ตัวเว็บแอปพลิเคชันทำงานได้สมบูรณ์และมีความพร้อมสำหรับนำไปติดตั้งใช้งานจริง (Production-Ready) โดยสรุปผลการทำงานของแต่ละฟังก์ชันได้ดังนี้:
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:6px;">
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-left:3px solid #0d9488; border-radius:6px; padding:6px 10px;">
+              <div style="font-family:'Kanit', sans-serif; font-size:12.5px; font-weight:600; color:#0f766e;">1. แดชบอร์ดและตารางสินทรัพย์ (Large Table & Sticky Header)</div>
+              <div style="font-size:11.5px; color:#334155; line-height:1.35;">
+                ตารางข้อมูล 25 คอลัมน์ ทำงานร่วมกับ Scroll Wrapper เลื่อนดูได้ทั้งแนวตั้งและแนวนอนโดยหัวตารางตรึงอยู่กับที่ และ Limit Select รีเซ็ตกลับหน้า 1 อัตโนมัติ ป้องกันข้อมูลคลาดเคลื่อน
+              </div>
+            </div>
+
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-left:3px solid #ea580c; border-radius:6px; padding:6px 10px;">
+              <div style="font-family:'Kanit', sans-serif; font-size:12.5px; font-weight:600; color:#c2410c;">2. ระบบนำเข้าและเทียบผลต่าง Excel (Update with Diff)</div>
+              <div style="font-size:11.5px; color:#334155; line-height:1.35;">
+                หน้าจอ Diff Preview ตรวจจับและแยกกลุ่มข้อมูล (Changed, To Create, Unchanged) ได้อย่างแม่นยำ เลือกเปรียบเทียบค่าใหม่หรือค่าเดิมได้เป็นรายคอลัมน์ ป้องกันการเขียนทับผิดพลาด
+              </div>
+            </div>
+
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-left:3px solid #0d9488; border-radius:6px; padding:6px 10px;">
+              <div style="font-family:'Kanit', sans-serif; font-size:12.5px; font-weight:600; color:#0f766e;">3. ระบบโอนย้ายสินทรัพย์แบบกลุ่ม (Bulk Transfer & Combobox)</div>
+              <div style="font-size:11.5px; color:#334155; line-height:1.35;">
+                หน้าต่าง Modal แสดงป้ายแผนกต้นทางอัตโนมัติ และค้นหาแผนกปลายทางแบบ Search-as-you-type จากรายชื่อ 214 แผนกได้อย่างรวดเร็วผ่านแป้นพิมพ์
+              </div>
+            </div>
+
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-left:3px solid #ea580c; border-radius:6px; padding:6px 10px;">
+              <div style="font-family:'Kanit', sans-serif; font-size:12.5px; font-weight:600; color:#c2410c;">4. ระบบ QR Code และจัดพิมพ์ป้ายสติกเกอร์ (Print Label)</div>
+              <div style="font-size:11.5px; color:#334155; line-height:1.35;">
+                สร้าง QR Code ไดนามิก และสร้างหน้าสำหรับจัดพิมพ์สติกเกอร์ขนาด 70×24 มม. ตรงตามสเปกกระดาษจริง
+              </div>
+            </div>
+
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; border-left:3px solid #0d9488; border-radius:6px; padding:6px 10px;">
+              <div style="font-family:'Kanit', sans-serif; font-size:12.5px; font-weight:600; color:#0f766e;">5. ความสมบูรณ์ด้านการแสดงผลและความปลอดภัย (UI & Security)</div>
+              <div style="font-size:11.5px; color:#334155; line-height:1.35;">
+                สลับโหมด Light/Dark Mode ไร้ปัญหาหน้าจอกระพริบ (Anti-FOUC) และเปิดดู PDF ผ่าน iframe ภายใต้นโยบาย CSP ได้อย่างปลอดภัย ผ่านการทดสอบระบบครบถ้วน 80/80 กรณีทดสอบ (100%)
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. สรุปผลและข้อเสนอแนะ -->
+        <section class="section-card" style="margin-bottom:0;">
+          <div class="sec-header">
+            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+            สรุปผลและข้อเสนอแนะ
+          </div>
+          <p class="text-body" style="font-size:13px;">
+            <b>สรุปผล:</b> ระบบช่วยเพิ่มความคล่องตัวในการบริหารจัดการครุภัณฑ์ บุคลากรแต่ละแผนกเข้าถึงข้อมูลได้เองแบบเรียลไทม์ ตาราง Scroll Wrapper + Sticky Header ช่วยให้อ่านข้อมูล 25 คอลัมน์ได้สะดวก และพิมพ์ป้าย QR Code ได้ตามขนาดจริง<br/>
+            <b>ข้อเสนอแนะ:</b> ควรต่อยอดระบบสแกน QR Code ผ่านกล้องสมาร์ตโฟนบนหน้าเว็บเบราว์เซอร์โดยตรง และพัฒนาระบบแจ้งเตือนสัญญาประกันใกล้หมดอายุผ่าน Email / Line Notify
+          </p>
+        </section>
+
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="col-right">
+
+        <!-- 6. วิธีการดำเนินงาน (12 STEPS) -->
+        <section class="section-card">
+          <div class="sec-header">
+            <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+            วิธีการดำเนินงาน (12 ขั้นตอน)
+          </div>
+
+          <div class="steps-grid">
+            <div class="step-card">
+              <div class="step-num">1</div>
+              <div class="step-title">วิเคราะห์ปัญหาและความต้องการ</div>
+              <div class="step-desc">รวบรวม Functional & Non-Functional</div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">2</div>
+              <div class="step-title">กำหนดกรอบสถาปัตยกรรม</div>
+              <div class="step-desc">MVC + Server-Side Rendering (SSR)</div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">3</div>
+              <div class="step-title">ออกแบบฐานข้อมูล MySQL</div>
+              <div class="step-desc">สร้าง 7 ตารางหลัก + ตาราง Sessions</div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">4</div>
+              <div class="step-title">ออกแบบกรณีการใช้งาน</div>
+              <div class="step-desc">กำหนดสิทธิ์ RBAC 3 ระดับผู้ใช้</div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">5</div>
+              <div class="step-title">ออกแบบ UI และ Partials</div>
+              <div class="step-desc">แยก Header, Navbar, Sidebar, Footer</div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">6</div>
+              <div class="step-title">พัฒนาระบบ Theming</div>
+              <div class="step-desc">CSS Variables & สคริปต์ Anti-FOUC</div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">7</div>
+              <div class="step-title">พัฒนาแดชบอร์ดและตาราง</div>
+              <div class="step-desc">Scroll Wrapper + Sticky Header</div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">8</div>
+              <div class="step-title">นำเข้าและเทียบ Diff Excel</div>
+              <div class="step-desc">หน้าพรีวิวแยก Changed / To Create</div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">9</div>
+              <div class="step-title">ระบบโอนย้ายแบบกลุ่ม</div>
+              <div class="step-desc">Modal กลาง & Search Combobox</div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">10</div>
+              <div class="step-title">ระบบ QR & ป้ายสติกเกอร์</div>
+              <div class="step-desc">qrcode.js & พิมพ์ป้าย 70x24 mm</div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">11</div>
+              <div class="step-title">แสดงผลเอกสาร PDF</div>
+              <div class="step-desc">ใช้ iframe สอดคล้องกับนโยบาย CSP</div>
+            </div>
+            <div class="step-card">
+              <div class="step-num">12</div>
+              <div class="step-title">ทดสอบระบบและสรุปผล</div>
+              <div class="step-desc">ทดสอบ 80 Test Cases ผ่าน 100%</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 7. ภาพบรรยากาศการปฏิบัติงาน / ผลงานระบบ -->
+        <section class="section-card" style="margin-bottom:0;">
+          <div class="sec-header">
+            <svg viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+            ภาพหน้าจอระบบและผลการทำงานจริง (Frontend Implementation)
+          </div>
+
+          <div class="screenshots-grid">
+            <!-- Screen 1: Dashboard -->
+            <div class="shot-box">
+              <div class="shot-img-mockup">
+                <div class="mockup-topbar">
+                  <div class="mockup-dot r"></div><div class="mockup-dot y"></div><div class="mockup-dot g"></div>
+                  <span style="color:#94a3b8; font-size:8px; margin-left:6px;">Dashboard & Large Table</span>
+                </div>
+                <div class="mockup-content">
+                  <div class="mockup-row">
+                    <div class="mockup-card" style="border-left:3px solid #0d9488;">สินทรัพย์: 1,420</div>
+                    <div class="mockup-card" style="border-left:3px solid #10b981;">Active: 1,280</div>
+                    <div class="mockup-card" style="border-left:3px solid #f59e0b;">Inactive: 140</div>
+                  </div>
+                  <table class="mockup-table">
+                    <thead><tr><th>ID</th><th>แท็ก</th><th>ชื่ออุปกรณ์</th><th>แผนก</th></tr></thead>
+                    <tbody>
+                      <tr><td>MED01</td><td>TG-104</td><td>เครื่องวัดความดัน</td><td>อายุรกรรม</td></tr>
+                      <tr><td>MED02</td><td>TG-105</td><td>เครื่องกระตุกหัวใจ</td><td>ฉุกเฉิน</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="shot-caption">1. แดชบอร์ดและตารางสินทรัพย์ (Sticky Header)</div>
+            </div>
+
+            <!-- Screen 2: Diff Preview -->
+            <div class="shot-box">
+              <div class="shot-img-mockup">
+                <div class="mockup-topbar">
+                  <div class="mockup-dot r"></div><div class="mockup-dot y"></div><div class="mockup-dot g"></div>
+                  <span style="color:#94a3b8; font-size:8px; margin-left:6px;">Update with Diff Preview</span>
+                </div>
+                <div class="mockup-content">
+                  <div style="background:#0f172a; padding:4px; border-radius:4px; border:1px solid #ea580c; color:#ea580c; font-size:8.5px;">
+                    ⚡ Changed: 14 รายการ | To Create: 5 รายการ
+                  </div>
+                  <div style="font-size:8px; color:#94a3b8; margin-top:2px;">
+                    [✓] MED01: แผนกเดิม (ฉุกเฉิน) → แผนกใหม่ (ICU)<br/>
+                    [✓] MED02: สัญญาเดิม (AG-88) → สัญญาใหม่ (AG-99)
+                  </div>
+                </div>
+              </div>
+              <div class="shot-caption">2. หน้าเปรียบเทียบผลต่างข้อมูล Excel (Diff)</div>
+            </div>
+
+            <!-- Screen 3: Transfer Modal -->
+            <div class="shot-box">
+              <div class="shot-img-mockup">
+                <div class="mockup-topbar">
+                  <div class="mockup-dot r"></div><div class="mockup-dot y"></div><div class="mockup-dot g"></div>
+                  <span style="color:#94a3b8; font-size:8px; margin-left:6px;">Bulk Transfer Modal</span>
+                </div>
+                <div class="mockup-content">
+                  <div style="background:#1e293b; border:1px solid #0d9488; padding:5px; border-radius:4px;">
+                    <div style="color:#99f6e4; font-size:8.5px; font-weight:bold;">โอนย้ายสินทรัพย์ (เลือก 3 รายการ)</div>
+                    <div style="font-size:7.5px; color:#cbd5e1; margin-top:3px;">
+                      ต้นทาง: <span style="background:#0d9488; color:#fff; padding:1px 3px; border-radius:2px;">รังสีวิทยา</span><br/>
+                      ปลายทาง: [ ค้นหา: อายุรกรรม... ▾ ]
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="shot-caption">3. หน้าต่างโต้ตอบโอนย้ายแผนกแบบกลุ่ม</div>
+            </div>
+
+            <!-- Screen 4: QR Label 70x24mm -->
+            <div class="shot-box">
+              <div class="shot-img-mockup">
+                <div class="mockup-topbar">
+                  <div class="mockup-dot r"></div><div class="mockup-dot y"></div><div class="mockup-dot g"></div>
+                  <span style="color:#94a3b8; font-size:8px; margin-left:6px;">Print Label 70x24mm</span>
+                </div>
+                <div class="mockup-content" style="align-items:center; justify-content:center;">
+                  <div style="background:#fff; color:#000; padding:6px; border-radius:4px; display:flex; gap:6px; align-items:center; width:90%; height:80%;">
+                    <!-- QR box -->
+                    <div style="width:40px; height:40px; background:#000; border:2px solid #000; padding:2px; display:flex; align-items:center; justify-content:center;">
+                      <div style="width:30px; height:30px; background:#fff; display:grid; grid-template-columns:repeat(3, 1fr); gap:1px;">
+                        <div style="background:#000;"></div><div></div><div style="background:#000;"></div>
+                        <div></div><div style="background:#000;"></div><div></div>
+                        <div style="background:#000;"></div><div></div><div style="background:#000;"></div>
+                      </div>
+                    </div>
+                    <div style="font-size:7px; line-height:1.2; font-family:'Kanit', sans-serif;">
+                      <b>รหัส: MED-66-0045</b><br/>
+                      Tag: TG-445890<br/>
+                      สัญญา: AG-2566-99<br/>
+                      หมดอายุ: 31/12/2570
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="shot-caption">4. ตัวอย่างป้ายสติกเกอร์ QR Code (70×24 mm)</div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="footer">
+      <!-- Workplace / Hospital Info -->
+      <div class="footer-org">
+        <div class="org-logo-circle" title="โรงพยาบาลศรีนครินทร์ คณะแพทยศาสตร์ มข.">
+          <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor">
+            <path d="M19 3H5c-1.1 0-1.99.9-1.99 2L3 19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z"/>
+          </svg>
+        </div>
+        <div class="org-info">
+          <div><b>ชื่อองค์กร:</b> คณะแพทยศาสตร์ โรงพยาบาลศรีนครินทร์ มหาวิทยาลัยขอนแก่น</div>
+          <div><b>หน่วยงาน:</b> ฝ่ายเทคโนโลยีสารสนเทศ (งานสารสนเทศ)</div>
+          <div><b>ผู้นิเทศงาน:</b> ผศ.ดร.อติราช สุขสวัสดิ์ / หัวหน้างานสารสนเทศ</div>
+        </div>
+      </div>
+
+      <!-- Student Info Card -->
+      <div class="footer-student">
+        <div class="student-meta">
+          <div class="name">นายอดิเทพ [...] / นายนครินทร์ มานิล</div>
+          <div class="role">ตำแหน่งที่ปฏิบัติงานสหกิจศึกษา: Frontend Developer</div>
+          <div class="email">adithep.si@rmuti.ac.th | สาขาวิชาวิศวกรรมคอมพิวเตอร์</div>
+        </div>
+        <div style="width:48px; height:48px; border-radius:50%; background:#fff; color:#0d9488; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:20px;">
+          👨‍💻
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>

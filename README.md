@@ -1,23 +1,23 @@
-# เอกสารปริญญานิพนธ์ โครงงาน Chatshop
+# เอกสารโครงงาน/รายงานการปฏิบัติงาน ระบบบริหารจัดการสินทรัพย์ (Asset Management)
 
-แอปพลิเคชันรวมศูนย์ข้อความและการจัดการคำสั่งซื้อสำหรับธุรกิจออนไลน์ (Chatshop)
-Chatshop: Centralized Chat and Order Management Application for Online Business
+ระบบบริหารจัดการสินทรัพย์ คณะแพทยศาสตร์ โรงพยาบาลศรีนครินทร์ มหาวิทยาลัยขอนแก่น
+Asset Management System: Faculty of Medicine, Khon Kaen University
 หลักสูตรวิศวกรรมคอมพิวเตอร์ คณะวิศวกรรมศาสตร์ มหาวิทยาลัยเทคโนโลยีราชมงคลอีสาน ขอนแก่น
-ผู้จัดทำพัฒนาเองทั้งระบบหลังบ้าน Laravel (`C:\interm\chatshop`) และแอปพลิเคชัน Flutter (`C:\interm\chatshop_app`) ดูรายละเอียดใน `.agent/rules/chatshop.md`
+ผู้จัดทำรับผิดชอบการออกแบบและพัฒนาส่วนต่อประสานผู้ใช้ (Frontend) ดูรายละเอียดใน `.agent/rules/assetmanage.md`
 
 ---
 
 ## 📁 โครงสร้างโฟลเดอร์
 
 ```
-d:\sahakit\doc\
+d:\inturn\doc\doc\doc\
 ├── input/
-│   ├── chapters/           # เนื้อหาแต่ละบท (ข้อความล้วน) ch1.txt, ch2.txt, ...
-│   └── reference/          # คู่มือ มทร.อีสาน 2566, เทมเพลต, เล่มรุ่นพี่ (ดูสไตล์อย่างเดียว)
+│   ├── chapters/           # เนื้อหาแต่ละบท ch1.txt, ch2.txt, ...
+│   └── reference/          # คู่มือ มทร.อีสาน 2566, เทมเพลต, เล่มรุ่นพี่
 ├── process/temp/           # ภาพตัวอย่างหน้า PNG และไฟล์ชั่วคราว (.gitignored)
-├── output/                 # ไฟล์ .docx / .pdf ของแต่ละบท
+├── output/                 # ไฟล์ .docx ของแต่ละบท
 └── .agent/
-    ├── rules/chatshop.md   # fact sheet ของโปรเจกต์ (ตรวจกับโค้ดจริงแล้ว)
+    ├── rules/assetmanage.md # fact sheet ของโปรเจกต์ Asset Management
     └── skills/rmuti-thesis/
         ├── SKILL.md        # กฎรูปเล่ม มทร.อีสาน + โครงบท + checklist
         └── scripts/thesis_build.py
@@ -26,10 +26,10 @@ d:\sahakit\doc\
 ## ▶️ สร้างบท
 
 ```bash
-python .agent/skills/rmuti-thesis/scripts/thesis_build.py 1
+python .agent/skills/rmuti-thesis/scripts/thesis_build.py 1 --no-pdf
 ```
 
-ผลลัพธ์อยู่ที่ `output/Chatshop_บทที่1_บทนำ.docx` / `.pdf` และภาพตัวอย่างใน `process/temp/`
+ผลลัพธ์อยู่ที่ `output/Asset_บทที่1_บทนำ.docx`
 
 ---
 
