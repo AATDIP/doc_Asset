@@ -1,0 +1,42 @@
+# ข้อมูลบทคัดย่อภาษาไทยและภาษาอังกฤษ (RMUTI Abstract)
+
+================================================================================
+หน้า ง : บทคัดย่อ (ภาษาไทย)
+================================================================================
+
+หัวข้อปริญญานิพนธ์	ระบบบริหารจัดการสินทรัพย์
+จัดทำโดย			นายอดิเทพ สิทธิโสภา, นายนครินทร์ มานิล และนายวีระพล สังข์ทอง
+ปีที่ปริญญานิพนธ์สำเร็จ	พ.ศ. 2568
+สาขาวิชา			วิศวกรรมคอมพิวเตอร์
+ประธานที่ปรึกษา		ผู้ช่วยศาสตราจารย์ ดร.อติราช สุขสวัสดิ์
+
+บทคัดย่อ
+
+	โครงงานนี้มีวัตถุประสงค์เพื่อพัฒนาระบบบริหารจัดการสินทรัพย์ (Asset Management) ในรูปแบบเว็บแอปพลิเคชัน สำหรับคณะแพทยศาสตร์ โรงพยาบาลศรีนครินทร์ มหาวิทยาลัยขอนแก่น เพื่อแก้ไขปัญหาข้อจำกัดของระบบเดิมที่จำกัดสิทธิ์การสืบค้นข้อมูลครุภัณฑ์เฉพาะแผนกพัสดุส่วนกลาง ทำให้บุคลากรแต่ละหน่วยงานไม่สามารถตรวจสอบสถานะครุภัณฑ์ในความดูแลได้โดยตรง เกิดความล่าช้าและขาดความคล่องตัวในการปฏิบัติงาน
+
+	ระบบพัฒนาขึ้นบนสถาปัตยกรรมแบบจำลอง มุมมอง และตัวควบคุม (MVC) ร่วมกับการเรนเดอร์ฝั่งเซิร์ฟเวอร์ โดยใช้ Node.js, Express Framework, EJS และ Bootstrap 5 ผู้จัดทำรับผิดชอบพัฒนาส่วนต่อประสานผู้ใช้ (Frontend) รองรับการแสดงผลตารางครุภัณฑ์ขนาดใหญ่พร้อมระบบตรึงหัวตาราง (Sticky Header) ระบบนำเข้าและเปรียบเทียบผลต่างของข้อมูล Excel ระบบโอนย้ายครุภัณฑ์ระหว่างแผนกแบบกลุ่ม การสร้างและจัดพิมพ์ป้ายสติกเกอร์รหัสคิวอาร์ขนาด 70×24 มิลลิเมตร และรองรับโหมดกลางคืน (Dark Mode)
+
+	ผลการดำเนินงานพบว่า ระบบเว็บแอปพลิเคชันทำงานได้อย่างมีเสถียรภาพและมีความพร้อมสำหรับการนำไปติดตั้งใช้งานจริง ผ่านการทดสอบฟังก์ชันการทำงานครบถ้วนทั้ง 80 กรณีทดสอบ (ร้อยละ 100) ส่วนต่อประสานผู้ใช้ตอบสนองได้อย่างราบรื่น การแสดงผลตารางขนาดใหญ่และการเปรียบเทียบข้อมูลมีความแม่นยำ และจัดพิมพ์ป้ายรหัสคิวอาร์ได้ตรงตามขนาดจริง ช่วยลดภาระงานของเจ้าหน้าที่พัสดุและเพิ่มความโปร่งใสในการตรวจสอบสินทรัพย์ของหน่วยงานได้อย่างเป็นรูปธรรม
+
+คำสำคัญ		:  ระบบบริหารจัดการสินทรัพย์, ครุภัณฑ์, ส่วนต่อประสานผู้ใช้, รหัสคิวอาร์, โรงพยาบาลศรีนครินทร์
+
+
+================================================================================
+หน้า จ : Abstract (ภาษาอังกฤษ)
+================================================================================
+
+Project Title	Asset Management Web Application
+Proposed by		Mr. Adithep Sitthisopa, Mr. Nakharin Manin, and Mr. Weeraphon Sangthong
+Year			2025
+Department		Computer Engineering
+Advisor			Assistant Professor Atirarj Suksawad, D.Eng.
+
+Abstract
+
+	This project aims to develop a Web-Based Asset Management System for the Faculty of Medicine, Srinagarind Hospital, Khon Kaen University. The system resolves operational bottlenecks in the existing workflow, where asset inquiry was restricted exclusively to central procurement personnel, preventing departmental staff from directly accessing real-time equipment status and causing unnecessary operational delays.
+
+	The system was developed under the Model-View-Controller (MVC) architecture with Server-Side Rendering (SSR) utilizing Node.js, Express Framework, EJS, and Bootstrap 5. The implementation specifically focused on the Frontend User Interface, featuring a 25-column asset table with sticky header pinning, an Excel data update and difference comparison preview, a bulk inter-departmental asset transfer modal, dynamic QR code generation with standard 70×24 mm sticker label printing, and seamless dark mode support.
+
+	The evaluation results demonstrate that the web application operates stably and is production-ready, successfully achieving a 100% pass rate across all 80 functional test cases. The user interface delivers smooth responsiveness, high data precision in large-scale table rendering, and accurate label formatting. The system significantly alleviates the workload of procurement staff and provides tangible efficiency improvements for institutional asset tracking.
+
+Keywords		:  Asset Management System, Medical Equipment, Frontend User Interface, QR Code, Srinagarind Hospital
