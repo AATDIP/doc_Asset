@@ -84,7 +84,7 @@ def add_figure(doc, chapter, title):
     doc.add_paragraph()
 
 
-def add_data_table(doc, chapter, title, rows, is_cont=False):
+def add_data_table(doc, chapter, title, rows, is_cont=False, has_blank_after=True):
     if is_cont:
         seq_no = doc._seq.get("ตารางที่", 1)
         p = doc.add_paragraph(style="Caption")
@@ -109,7 +109,8 @@ def add_data_table(doc, chapter, title, rows, is_cont=False):
             p.add_run(row[j] if j < len(row) else "")
     trPr = t.rows[0]._tr.get_or_add_trPr()  # repeat header row on each page
     trPr.append(OxmlElement("w:tblHeader"))
-    doc.add_paragraph()
+    if has_blank_after:
+        doc.add_paragraph()
 
 
 def mark_thai(run):
@@ -194,14 +195,16 @@ def build_doc(lines):
             while i < len(merged) and " | " in merged[i]:
                 rows.append(merged[i])
                 i += 1
-            add_data_table(doc, chapter, line[7:].strip(), rows)
+            has_next = (i < len(merged) and merged[i].startswith("@table_cont "))
+            add_data_table(doc, chapter, line[7:].strip(), rows, has_blank_after=not has_next)
             continue
         if line.startswith("@table_cont "):
             rows = []
             while i < len(merged) and " | " in merged[i]:
                 rows.append(merged[i])
                 i += 1
-            add_data_table(doc, chapter, line[12:].strip(), rows, is_cont=True)
+            has_next = (i < len(merged) and merged[i].startswith("@table_cont "))
+            add_data_table(doc, chapter, line[12:].strip(), rows, is_cont=True, has_blank_after=not has_next)
             continue
         if LIST_RE.match(line):
             doc.add_paragraph("			" + line)
@@ -226,8 +229,8 @@ def build_doc(lines):
             doc.add_paragraph(NUM_RE.sub("", line), style=f"Heading {min(level, 4)}")
         elif level >= 3:
             p = doc.add_paragraph("\t" * (level - 2) + line)
-            # label-only item ("2.1.1 ข้อดี") stays with the list under it
-            p.paragraph_format.keep_with_next = " " not in NUM_RE.sub("", line)
+            # label-only item ("2.1.1 ข้อดี") stays with the list under it, or headings before tables/figures
+            p.paragraph_format.keep_with_next = (" " not in NUM_RE.sub("", line)) or (i < len(merged) and merged[i].startswith(("@table", "@fig")))
             under_item = True
         else:
             doc.add_paragraph(("\t\t" if under_item else "\t") + line)
