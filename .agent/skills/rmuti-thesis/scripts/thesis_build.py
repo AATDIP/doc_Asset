@@ -48,6 +48,7 @@ def add_caption(container, label, chapter, text, align):
     add = container.add_paragraph
     p = add(style="Caption")
     p.alignment = align
+    p.paragraph_format.keep_with_next = True
     p.add_run(f"{label} {chapter}.")
     seq_no = container._seq[label] = container._seq.get(label, 0) + 1
     fld = OxmlElement("w:fldSimple")
@@ -70,6 +71,7 @@ def add_figure(doc, chapter, title):
     cell = box.rows[0].cells[0]
     ph = cell.paragraphs[0]
     ph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    ph.paragraph_format.keep_with_next = True
     seq_no = doc._seq.get("รูปที่", 0) + 1
     fig_file = os.path.join(ROOT, "input", "figures", f"fig_{chapter}_{seq_no}.png")
     if os.path.exists(fig_file):
@@ -82,8 +84,16 @@ def add_figure(doc, chapter, title):
     doc.add_paragraph()
 
 
-def add_data_table(doc, chapter, title, rows):
-    add_caption(doc, "ตารางที่", chapter, title, WD_ALIGN_PARAGRAPH.LEFT)
+def add_data_table(doc, chapter, title, rows, is_cont=False):
+    if is_cont:
+        seq_no = doc._seq.get("ตารางที่", 1)
+        p = doc.add_paragraph(style="Caption")
+        p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        p.paragraph_format.keep_with_next = True
+        p.paragraph_format.page_break_before = True
+        p.add_run(f"ตารางที่ {chapter}.{seq_no}  {title} (ต่อ)")
+    else:
+        add_caption(doc, "ตารางที่", chapter, title, WD_ALIGN_PARAGRAPH.LEFT)
     cells = [[c.strip() for c in r.split("|")] for r in rows]
     ncol = max(len(r) for r in cells)
     t = doc.add_table(rows=len(cells), cols=ncol)
@@ -186,6 +196,13 @@ def build_doc(lines):
                 i += 1
             add_data_table(doc, chapter, line[7:].strip(), rows)
             continue
+        if line.startswith("@table_cont "):
+            rows = []
+            while i < len(merged) and " | " in merged[i]:
+                rows.append(merged[i])
+                i += 1
+            add_data_table(doc, chapter, line[12:].strip(), rows, is_cont=True)
+            continue
         if LIST_RE.match(line):
             doc.add_paragraph("			" + line)
             continue
@@ -281,15 +298,32 @@ def short_last_lines(doc, min_fill=0.4):
 
 
 def export_pdf(docx_path, pdf_path):
-    import win32com.client
-    word = win32com.client.DispatchEx("Word.Application")  # own instance; Dispatch can grab one that is still quitting
-    word.Visible = False
+    import subprocess
+    ps_script = os.path.join(ROOT, "process", "export_pdf.ps1")
+    if os.path.exists(ps_script):
+        cmd = [
+            "powershell", "-ExecutionPolicy", "Bypass", "-File", ps_script,
+            "-docxPath", os.path.abspath(docx_path),
+            "-pdfPath", os.path.abspath(pdf_path)
+        ]
+        res = subprocess.run(cmd, capture_output=True, text=True)
+        if res.returncode != 0:
+            print("PDF export failed:", res.stderr)
+        else:
+            print("PDF exported:", pdf_path)
+        return
     try:
-        d = word.Documents.Open(docx_path)
-        d.SaveAs(pdf_path, FileFormat=17)
-        d.Close()
-    finally:
-        word.Quit()
+        import win32com.client
+        word = win32com.client.DispatchEx("Word.Application")
+        word.Visible = False
+        try:
+            d = word.Documents.Open(os.path.abspath(docx_path))
+            d.SaveAs(os.path.abspath(pdf_path), FileFormat=17)
+            d.Close()
+        finally:
+            word.Quit()
+    except Exception as e:
+        print("PDF export not available:", e)
 
 
 def render_pngs(pdf_path, stem):
@@ -303,26 +337,41 @@ def render_pngs(pdf_path, stem):
 
 
 def main(argv):
-    n = argv[1]
-    with open(os.path.join(ROOT, "input", "chapters", f"ch{n}.txt"), encoding="utf-8") as f:
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("chapter", type=int)
+    parser.add_argument("--input", default=None)
+    parser.add_argument("--out", default=None)
+    parser.add_argument("--no-pdf", action="store_true")
+    args = parser.parse_args(argv[1:])
+
+    chapter_num = args.chapter
+    in_file = args.input or os.path.join(ROOT, "input", "chapters", f"ch{chapter_num}.txt")
+    with open(in_file, encoding="utf-8") as f:
         doc, chapter, title = build_doc(f.readlines())
     check(doc)
     for fill, text in short_last_lines(doc):
         print(f"WARN last line ~{fill}% full, reword: {text[:50]}")
-    stem = f"Asset_บทที่{chapter}_{title.replace(' ', '')}"
-    out = os.path.join(ROOT, "output", stem + ".docx")
+    if args.out:
+        out = os.path.abspath(args.out)
+    else:
+        stem = f"Asset_บทที่{chapter}_{title.replace(' ', '')}"
+        out = os.path.join(ROOT, "output", stem + ".docx")
     try:
         doc.save(out)
     except PermissionError:  # file open in Word: don't lose the build
-        out = os.path.join(ROOT, "output", stem + "_new.docx")
-        doc.save(out)
-        print("Target open in Word, saved instead to", out)
+        out_fallback = out.replace(".docx", "_new.docx")
+        doc.save(out_fallback)
+        print("Target open in Word, saved instead to", out_fallback)
+        out = out_fallback
     print("docx:", out)
-    if "--no-pdf" in argv:
+    if args.no_pdf:
         return
-    pdf = os.path.join(ROOT, "output", stem + ".pdf")
+    stem_name = os.path.splitext(os.path.basename(out))[0]
+    pdf = os.path.splitext(out)[0] + ".pdf"
     export_pdf(out, pdf)
-    print(f"pdf: {pdf} ({render_pngs(pdf, stem)} pages, previews in process/temp/)")
+    if os.path.exists(pdf):
+        print(f"pdf: {pdf} ({render_pngs(pdf, stem_name)} pages, previews in process/temp/)")
 
 
 if __name__ == "__main__":
