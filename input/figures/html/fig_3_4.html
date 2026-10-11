@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    background-color: #ffffff;
+    font-family: 'TH Sarabun New', 'TH SarabunPSK', 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.diagram-container {
+    background: #ffffff;
+    padding: 10px;
+    display: inline-block;
+}
+svg {
+    font-family: 'TH Sarabun New', 'TH SarabunPSK', 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
+    overflow: visible;
+}
+.title { font-size: 20px; font-weight: bold; fill: #1e293b; text-anchor: middle; }
+.subtitle { font-size: 15px; fill: #64748b; text-anchor: middle; }
+.box-title { font-size: 16px; font-weight: bold; fill: #0f172a; text-anchor: middle; }
+.box-desc { font-size: 13.5px; fill: #334155; text-anchor: middle; }
+.badge { font-size: 12px; font-weight: bold; fill: #ffffff; }
+.label { font-size: 13px; font-weight: bold; fill: #475569; }
+.decision-text { font-size: 14.5px; font-weight: bold; fill: #1e293b; text-anchor: middle; }
+.tag-pk { fill: #dc2626; font-weight: bold; font-size: 12px; }
+.tag-fk { fill: #2563eb; font-weight: bold; font-size: 12px; }
+.col-name { font-size: 13.5px; fill: #1e293b; font-family: monospace; }
+.col-type { font-size: 12.5px; fill: #64748b; }
+
+</style>
+</head>
+<body>
+<div class="diagram-container">
+<svg width="780" height="920" viewBox="0 0 780 920" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08" />
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#4f46e5" />
+    </marker>
+    <marker id="arrow-warn" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#ef4444" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="390" y="32" class="title">รูปที่ 3.4 ผังงานกระบวนการโอนย้ายสินทรัพย์ระหว่างแผนกแบบกลุ่ม</text>
+  <text x="390" y="54" class="subtitle">ระบบโอนย้ายสินทรัพย์ (Batch Department Transfer) พร้อมช่องค้นหาแผนกและบันทึกประวัติ</text>
+
+  <!-- Start -->
+  <rect x="300" y="75" width="180" height="36" rx="18" fill="#1e3a8a" filter="url(#shadow)" />
+  <text x="390" y="99" fill="#ffffff" font-size="16" font-weight="bold" text-anchor="middle">เริ่มต้น</text>
+  <line x1="390" y1="111" x2="390" y2="133" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 1 -->
+  <polygon points="180,133 600,133 580,181 160,181" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.8" filter="url(#shadow)" />
+  <text x="390" y="153" class="box-title">ผู้ใช้เลือกรายการสินทรัพย์ที่ต้องการโอนย้าย (Batch Selection)</text>
+  <text x="390" y="170" class="box-desc">ทำเครื่องหมายเลือกรายการครุภัณฑ์หลายรายการพร้อมกันจากตารางแดชบอร์ด</text>
+  <line x1="390" y1="181" x2="390" y2="203" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 2 -->
+  <rect x="170" y="203" width="440" height="50" rx="8" fill="#f8fafc" stroke="#4f46e5" stroke-width="1.8" filter="url(#shadow)" />
+  <text x="390" y="224" class="box-title">คลิกปุ่ม "โอนย้ายแผนก" เพื่อเปิด Transfer Modal</text>
+  <text x="390" y="242" class="box-desc">ระบบดึงชื่อแผนกต้นทาง (from_dept) มาแสดงผลเป็นป้ายกำกับอัตโนมัติ</text>
+  <line x1="390" y1="253" x2="390" y2="275" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 3 -->
+  <polygon points="180,275 600,275 580,323 160,323" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.8" filter="url(#shadow)" />
+  <text x="390" y="295" class="box-title">พิมพ์ค้นหาและเลือกแผนกปลายทาง (Department Combobox)</text>
+  <text x="390" y="312" class="box-desc">รองรับการพิมพ์แล้วกรองข้อมูลทันที เลื่อนเลือกด้วยปุ่มลูกศร และกด Enter</text>
+  <line x1="390" y1="323" x2="390" y2="345" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 4 -->
+  <polygon points="180,345 600,345 580,393 160,393" fill="#eef2ff" stroke="#4f46e5" stroke-width="1.8" filter="url(#shadow)" />
+  <text x="390" y="365" class="box-title">ระบุหมายเหตุ/เหตุผลการโอนย้าย และคลิก "ยืนยันการโอนย้าย"</text>
+  <text x="390" y="382" class="box-desc">บันทึกเหตุผลของการย้ายสถานที่ เช่น ส่งซ่อม ย้ายประจำห้องตรวจใหม่</text>
+  <line x1="390" y1="393" x2="390" y2="415" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Decision 1 -->
+  <polygon points="390,415 530,460 390,505 250,460" fill="#fef3c7" stroke="#d97706" stroke-width="1.8" filter="url(#shadow)" />
+  <text x="390" y="456" class="decision-text">เลือกแผนกปลายทาง</text>
+  <text x="390" y="474" class="decision-text">ถูกต้องหรือไม่?</text>
+
+  <!-- Decision 1 Fail (Right) -->
+  <text x="540" y="454" fill="#ef4444" font-size="13.5" font-weight="bold">ไม่ถูกต้อง / ค่าว่าง</text>
+  <polyline points="530,460 660,460 660,299 605,299" fill="none" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#arrow-warn)" />
+  <rect x="580" y="370" width="150" height="40" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="1.2" />
+  <text x="655" y="388" fill="#b91c1c" font-size="12" font-weight="bold" text-anchor="middle">แจ้งเตือนให้ระบุแผนก</text>
+  <text x="655" y="402" fill="#b91c1c" font-size="11" text-anchor="middle">ปลายทางให้ถูกต้อง</text>
+
+  <!-- Decision 1 Pass (Down) -->
+  <text x="405" y="525" fill="#059669" font-size="13.5" font-weight="bold">ถูกต้อง</text>
+  <line x1="390" y1="505" x2="390" y2="535" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Decision 2: Permission Check -->
+  <polygon points="390,535 530,580 390,625 250,580" fill="#fef3c7" stroke="#d97706" stroke-width="1.8" filter="url(#shadow)" />
+  <text x="390" y="576" class="decision-text">ตรวจสอบสิทธิ์ผู้ใช้งาน</text>
+  <text x="390" y="594" class="decision-text">(Admin / Super Admin)?</text>
+
+  <!-- Permission Denied -->
+  <text x="540" y="574" fill="#ef4444" font-size="13.5" font-weight="bold">ไม่มีสิทธิ์</text>
+  <polyline points="530,580 660,580 660,865 485,865" fill="none" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#arrow-warn)" />
+  <rect x="580" y="630" width="150" height="40" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="1.2" />
+  <text x="655" y="648" fill="#b91c1c" font-size="12" font-weight="bold" text-anchor="middle">ปฏิเสธการเข้าถึง</text>
+  <text x="655" y="662" fill="#b91c1c" font-size="11" text-anchor="middle">สิทธิ์ไม่เพียงพอ</text>
+
+  <!-- Permission Granted -->
+  <text x="405" y="645" fill="#059669" font-size="13.5" font-weight="bold">มีสิทธิ์ดำเนินการ</text>
+  <line x1="390" y1="625" x2="390" y2="655" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 5 -->
+  <rect x="170" y="655" width="440" height="50" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8" filter="url(#shadow)" />
+  <text x="390" y="676" class="box-title">อัปเดตชื่อแผนกปัจจุบัน (dept_name) ในตาราง assets</text>
+  <text x="390" y="694" class="box-desc">ปรับปรุงข้อมูลแผนกครอบครองใหม่สำหรับทุกรายการสินทรัพย์ที่เลือก</text>
+  <line x1="390" y1="705" x2="390" y2="725" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 6 -->
+  <rect x="170" y="725" width="440" height="50" rx="8" fill="#f8fafc" stroke="#4f46e5" stroke-width="1.8" filter="url(#shadow)" />
+  <text x="390" y="746" class="box-title">บันทึกประวัติการโอนย้ายลงตาราง asset_transfers</text>
+  <text x="390" y="763" class="box-desc">บันทึก asset_id, from_dept, to_dept, note, ผู้ทำรายการ และเวลา</text>
+  <line x1="390" y1="775" x2="390" y2="795" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 7 -->
+  <rect x="170" y="795" width="440" height="46" rx="8" fill="#f8fafc" stroke="#4f46e5" stroke-width="1.8" filter="url(#shadow)" />
+  <text x="390" y="815" class="box-title">บันทึกประวัติกิจกรรมลงตาราง activity_logs</text>
+  <text x="390" y="831" class="box-desc">ระบุโมดูล Transfers บันทึกรายการโอนย้ายแบบกลุ่มเพื่อความโปร่งใส</text>
+  <line x1="390" y1="841" x2="390" y2="855" stroke="#4f46e5" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- End -->
+  <rect x="300" y="855" width="180" height="38" rx="19" fill="#1e3a8a" filter="url(#shadow)" />
+  <text x="390" y="879" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle">สิ้นสุด (แจ้งเตือนสำเร็จ)</text>
+</svg>
+</div>
+</body>
+</html>

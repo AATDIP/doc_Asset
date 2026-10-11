@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    background-color: #ffffff;
+    font-family: 'TH Sarabun New', 'TH SarabunPSK', 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.diagram-container {
+    background: #ffffff;
+    padding: 10px;
+    display: inline-block;
+}
+svg {
+    font-family: 'TH Sarabun New', 'TH SarabunPSK', 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
+    overflow: visible;
+}
+.title { font-size: 20px; font-weight: bold; fill: #1e293b; text-anchor: middle; }
+.subtitle { font-size: 15px; fill: #64748b; text-anchor: middle; }
+.box-title { font-size: 16px; font-weight: bold; fill: #0f172a; text-anchor: middle; }
+.box-desc { font-size: 13.5px; fill: #334155; text-anchor: middle; }
+.badge { font-size: 12px; font-weight: bold; fill: #ffffff; }
+.label { font-size: 13px; font-weight: bold; fill: #475569; }
+.decision-text { font-size: 14.5px; font-weight: bold; fill: #1e293b; text-anchor: middle; }
+.tag-pk { fill: #dc2626; font-weight: bold; font-size: 12px; }
+.tag-fk { fill: #2563eb; font-weight: bold; font-size: 12px; }
+.col-name { font-size: 13.5px; fill: #1e293b; font-family: monospace; }
+.col-type { font-size: 12.5px; fill: #64748b; }
+
+.erd-header { font-size: 15px; font-weight: bold; fill: #ffffff; text-anchor: middle; }
+.erd-row { font-size: 12.5px; fill: #1e293b; }
+.cardinality { font-size: 12px; font-weight: bold; fill: #1e3a8a; }
+</style>
+</head>
+<body>
+<div class="diagram-container">
+<svg width="1120" height="820" viewBox="0 0 1120 820" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08" />
+    </filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="560" y="32" class="title">รูปที่ 3.5 แผนภาพความสัมพันธ์ของข้อมูลในระบบบริหารจัดการสินทรัพย์ (Entity Relationship Diagram)</text>
+  <text x="560" y="52" class="subtitle">สถาปัตยกรรมฐานข้อมูลเชิงสัมพันธ์ MySQL แสดงตารางหลัก คีย์หลัก (PK) คีย์นอก (FK) และความสัมพันธ์ 1:N</text>
+
+  <!-- ==================== TABLE 1: users ==================== -->
+  <g transform="translate(60, 80)">
+    <rect x="0" y="0" width="230" height="235" rx="6" fill="#ffffff" stroke="#1e3a8a" stroke-width="1.8" filter="url(#shadow)" />
+    <path d="M 0 6 Q 0 0 6 0 L 224 0 Q 230 0 230 6 L 230 30 L 0 30 Z" fill="#1e3a8a" />
+    <text x="115" y="21" class="erd-header">users (ตารางผู้ใช้)</text>
+    
+    <text x="10" y="50" class="tag-pk">PK</text>
+    <text x="35" y="50" class="col-name">id</text>
+    <text x="150" y="50" class="col-type">INT (AUTO)</text>
+    
+    <text x="35" y="71" class="col-name">username</text>
+    <text x="150" y="71" class="col-type">VARCHAR(50)</text>
+    
+    <text x="35" y="92" class="col-name">email</text>
+    <text x="150" y="92" class="col-type">VARCHAR(100)</text>
+    
+    <text x="35" y="113" class="col-name">password</text>
+    <text x="150" y="113" class="col-type">VARCHAR(255)</text>
+    
+    <text x="35" y="134" class="col-name">full_name</text>
+    <text x="150" y="134" class="col-type">VARCHAR(100)</text>
+    
+    <text x="35" y="155" class="col-name">role</text>
+    <text x="150" y="155" class="col-type">VARCHAR(20)</text>
+    
+    <text x="35" y="176" class="col-name">department</text>
+    <text x="150" y="176" class="col-type">VARCHAR(100)</text>
+    
+    <text x="35" y="197" class="col-name">email_verified</text>
+    <text x="150" y="197" class="col-type">TINYINT(1)</text>
+    
+    <text x="35" y="218" class="col-name">created_at</text>
+    <text x="150" y="218" class="col-type">DATETIME</text>
+  </g>
+
+  <!-- ==================== TABLE 2: assets ==================== -->
+  <g transform="translate(430, 80)">
+    <rect x="0" y="0" width="290" height="285" rx="6" fill="#ffffff" stroke="#0284c7" stroke-width="1.8" filter="url(#shadow)" />
+    <path d="M 0 6 Q 0 0 6 0 L 284 0 Q 290 0 290 6 L 290 30 L 0 30 Z" fill="#0284c7" />
+    <text x="145" y="21" class="erd-header">assets (ตารางสินทรัพย์และครุภัณฑ์)</text>
+    
+    <text x="10" y="50" class="tag-pk">PK</text>
+    <text x="35" y="50" class="col-name">asset_id</text>
+    <text x="195" y="50" class="col-type">VARCHAR(100)</text>
+    
+    <text x="35" y="71" class="col-name">tag_number</text>
+    <text x="195" y="71" class="col-type">VARCHAR(100)</text>
+    
+    <text x="35" y="92" class="col-name">serial_number_asset</text>
+    <text x="195" y="92" class="col-type">VARCHAR(100)</text>
+    
+    <text x="35" y="113" class="col-name">descr</text>
+    <text x="195" y="113" class="col-type">VARCHAR(255)</text>
+    
+    <text x="35" y="134" class="col-name">model</text>
+    <text x="195" y="134" class="col-type">VARCHAR(100)</text>
+    
+    <text x="35" y="155" class="col-name">dept_name</text>
+    <text x="195" y="155" class="col-type">VARCHAR(255)</text>
+    
+    <text x="35" y="176" class="col-name">category_name</text>
+    <text x="195" y="176" class="col-type">VARCHAR(100)</text>
+    
+    <text x="35" y="197" class="col-name">asset_status</text>
+    <text x="195" y="197" class="col-type">VARCHAR(100)</text>
+    
+    <text x="35" y="218" class="col-name">x_agreement_id</text>
+    <text x="195" y="218" class="col-type">VARCHAR(100)</text>
+    
+    <text x="35" y="239" class="col-name">expire_date</text>
+    <text x="195" y="239" class="col-type">DATE</text>
+    
+    <text x="10" y="260" class="tag-fk">FK</text>
+    <text x="35" y="260" class="col-name">uploaded_by</text>
+    <text x="195" y="260" class="col-type">INT</text>
+    
+    <text x="35" y="278" class="col-name">updated_at</text>
+    <text x="195" y="278" class="col-type">DATETIME</text>
+  </g>
+
+  <!-- ==================== TABLE 3: departments ==================== -->
+  <g transform="translate(830, 80)">
+    <rect x="0" y="0" width="240" height="110" rx="6" fill="#ffffff" stroke="#475569" stroke-width="1.8" filter="url(#shadow)" />
+    <path d="M 0 6 Q 0 0 6 0 L 234 0 Q 240 0 240 6 L 240 30 L 0 30 Z" fill="#475569" />
+    <text x="120" y="21" class="erd-header">departments (ตารางแผนก)</text>
+    
+    <text x="10" y="52" class="tag-pk">PK</text>
+    <text x="35" y="52" class="col-name">id</text>
+    <text x="155" y="52" class="col-type">INT (AUTO)</text>
+    
+    <text x="35" y="75" class="col-name">name</text>
+    <text x="155" y="75" class="col-type">VARCHAR(255)</text>
+    
+    <text x="35" y="98" class="col-name">costcenter</text>
+    <text x="155" y="98" class="col-type">VARCHAR(50)</text>
+  </g>
+
+  <!-- ==================== TABLE 4: categories ==================== -->
+  <g transform="translate(830, 230)">
+    <rect x="0" y="0" width="240" height="110" rx="6" fill="#ffffff" stroke="#475569" stroke-width="1.8" filter="url(#shadow)" />
+    <path d="M 0 6 Q 0 0 6 0 L 234 0 Q 240 0 240 6 L 240 30 L 0 30 Z" fill="#475569" />
+    <text x="120" y="21" class="erd-header">categories (ตารางหมวดหมู่)</text>
+    
+    <text x="10" y="52" class="tag-pk">PK</text>
+    <text x="35" y="52" class="col-name">id</text>
+    <text x="155" y="52" class="col-type">INT (AUTO)</text>
+    
+    <text x="35" y="75" class="col-name">code</text>
+    <text x="155" y="75" class="col-type">VARCHAR(50)</text>
+    
+    <text x="35" y="98" class="col-name">name</text>
+    <text x="155" y="98" class="col-type">VARCHAR(100)</text>
+  </g>
+
+  <!-- ==================== TABLE 5: asset_transfers ==================== -->
+  <g transform="translate(430, 440)">
+    <rect x="0" y="0" width="290" height="195" rx="6" fill="#ffffff" stroke="#4f46e5" stroke-width="1.8" filter="url(#shadow)" />
+    <path d="M 0 6 Q 0 0 6 0 L 284 0 Q 290 0 290 6 L 290 30 L 0 30 Z" fill="#4f46e5" />
+    <text x="145" y="21" class="erd-header">asset_transfers (ประวัติโอนย้าย)</text>
+    
+    <text x="10" y="52" class="tag-pk">PK</text>
+    <text x="35" y="52" class="col-name">id</text>
+    <text x="185" y="52" class="col-type">INT (AUTO)</text>
+    
+    <text x="10" y="75" class="tag-fk">FK</text>
+    <text x="35" y="75" class="col-name">asset_id</text>
+    <text x="185" y="75" class="col-type">VARCHAR(100)</text>
+    
+    <text x="35" y="98" class="col-name">from_dept</text>
+    <text x="185" y="98" class="col-type">VARCHAR(255)</text>
+    
+    <text x="35" y="121" class="col-name">to_dept</text>
+    <text x="185" y="121" class="col-type">VARCHAR(255)</text>
+    
+    <text x="35" y="144" class="col-name">note</text>
+    <text x="185" y="144" class="col-type">TEXT</text>
+    
+    <text x="10" y="167" class="tag-fk">FK</text>
+    <text x="35" y="167" class="col-name">transferred_by</text>
+    <text x="185" y="167" class="col-type">INT</text>
+    
+    <text x="35" y="188" class="col-name">created_at</text>
+    <text x="185" y="188" class="col-type">DATETIME</text>
+  </g>
+
+  <!-- ==================== TABLE 6: documents ==================== -->
+  <g transform="translate(60, 360)">
+    <rect x="0" y="0" width="230" height="175" rx="6" fill="#ffffff" stroke="#059669" stroke-width="1.8" filter="url(#shadow)" />
+    <path d="M 0 6 Q 0 0 6 0 L 224 0 Q 230 0 230 6 L 230 30 L 0 30 Z" fill="#059669" />
+    <text x="115" y="21" class="erd-header">documents (เอกสาร PDF)</text>
+    
+    <text x="10" y="52" class="tag-pk">PK</text>
+    <text x="35" y="52" class="col-name">id</text>
+    <text x="150" y="52" class="col-type">INT (AUTO)</text>
+    
+    <text x="35" y="75" class="col-name">filename</text>
+    <text x="150" y="75" class="col-type">VARCHAR(255)</text>
+    
+    <text x="35" y="98" class="col-name">original_name</text>
+    <text x="150" y="98" class="col-type">VARCHAR(255)</text>
+    
+    <text x="35" y="121" class="col-name">department</text>
+    <text x="150" y="121" class="col-type">VARCHAR(255)</text>
+    
+    <text x="10" y="144" class="tag-fk">FK</text>
+    <text x="35" y="144" class="col-name">uploaded_by</text>
+    <text x="150" y="144" class="col-type">INT</text>
+    
+    <text x="35" y="165" class="col-name">created_at</text>
+    <text x="150" y="165" class="col-type">DATETIME</text>
+  </g>
+
+  <!-- ==================== TABLE 7: activity_logs ==================== -->
+  <g transform="translate(60, 580)">
+    <rect x="0" y="0" width="230" height="195" rx="6" fill="#ffffff" stroke="#d97706" stroke-width="1.8" filter="url(#shadow)" />
+    <path d="M 0 6 Q 0 0 6 0 L 224 0 Q 230 0 230 6 L 230 30 L 0 30 Z" fill="#d97706" />
+    <text x="115" y="21" class="erd-header">activity_logs (ประวัติกิจกรรม)</text>
+    
+    <text x="10" y="52" class="tag-pk">PK</text>
+    <text x="35" y="52" class="col-name">id</text>
+    <text x="150" y="52" class="col-type">INT (AUTO)</text>
+    
+    <text x="10" y="75" class="tag-fk">FK</text>
+    <text x="35" y="75" class="col-name">user_id</text>
+    <text x="150" y="75" class="col-type">INT</text>
+    
+    <text x="35" y="98" class="col-name">module</text>
+    <text x="150" y="98" class="col-type">VARCHAR(50)</text>
+    
+    <text x="35" y="121" class="col-name">action</text>
+    <text x="150" y="121" class="col-type">VARCHAR(50)</text>
+    
+    <text x="35" y="144" class="col-name">target</text>
+    <text x="150" y="144" class="col-type">VARCHAR(100)</text>
+    
+    <text x="35" y="167" class="col-name">details</text>
+    <text x="150" y="167" class="col-type">TEXT</text>
+    
+    <text x="35" y="188" class="col-name">created_at</text>
+    <text x="150" y="188" class="col-type">DATETIME</text>
+  </g>
+
+  <!-- ==================== TABLE 8: sessions ==================== -->
+  <g transform="translate(830, 440)">
+    <rect x="0" y="0" width="240" height="110" rx="6" fill="#ffffff" stroke="#64748b" stroke-width="1.8" filter="url(#shadow)" />
+    <path d="M 0 6 Q 0 0 6 0 L 234 0 Q 240 0 240 6 L 240 30 L 0 30 Z" fill="#64748b" />
+    <text x="120" y="21" class="erd-header">sessions (ตารางเซสชันระบบ)</text>
+    
+    <text x="10" y="52" class="tag-pk">PK</text>
+    <text x="35" y="52" class="col-name">session_id</text>
+    <text x="145" y="52" class="col-type">VARCHAR(128)</text>
+    
+    <text x="35" y="75" class="col-name">expires</text>
+    <text x="145" y="75" class="col-type">INT(11)</text>
+    
+    <text x="35" y="98" class="col-name">data</text>
+    <text x="145" y="98" class="col-type">MEDIUMTEXT</text>
+  </g>
+
+  <!-- ==================== RELATIONSHIP LINES ==================== -->
+  <!-- users (1) to assets (N) [uploaded_by] -->
+  <path d="M 290 130 L 360 130 L 360 340 L 430 340" fill="none" stroke="#2563eb" stroke-width="2" />
+  <circle cx="295" cy="130" r="4" fill="#2563eb" />
+  <text x="305" y="125" class="cardinality">1</text>
+  <polyline points="420,333 430,340 420,347" fill="none" stroke="#2563eb" stroke-width="2" />
+  <text x="405" y="335" class="cardinality">N</text>
+
+  <!-- assets (1) to asset_transfers (N) [asset_id] -->
+  <path d="M 575 365 L 575 440" fill="none" stroke="#4f46e5" stroke-width="2" />
+  <circle cx="575" cy="370" r="4" fill="#4f46e5" />
+  <text x="585" y="380" class="cardinality">1</text>
+  <polyline points="568,430 575,440 582,430" fill="none" stroke="#4f46e5" stroke-width="2" />
+  <text x="585" y="435" class="cardinality">N</text>
+
+  <!-- users (1) to asset_transfers (N) [transferred_by] -->
+  <path d="M 290 220 L 340 220 L 340 605 L 430 605" fill="none" stroke="#4f46e5" stroke-width="1.8" stroke-dasharray="4,3" />
+  <circle cx="295" cy="220" r="4" fill="#4f46e5" />
+  <text x="305" y="215" class="cardinality">1</text>
+  <polyline points="420,598 430,605 420,612" fill="none" stroke="#4f46e5" stroke-width="2" />
+  <text x="405" y="600" class="cardinality">N</text>
+
+  <!-- users (1) to documents (N) [uploaded_by] -->
+  <path d="M 175 315 L 175 360" fill="none" stroke="#059669" stroke-width="2" />
+  <circle cx="175" cy="320" r="4" fill="#059669" />
+  <text x="185" y="330" class="cardinality">1</text>
+  <polyline points="168,350 175,360 182,350" fill="none" stroke="#059669" stroke-width="2" />
+  <text x="185" y="355" class="cardinality">N</text>
+
+  <!-- users (1) to activity_logs (N) [user_id] (routes around left side) -->
+  <path d="M 60 130 L 30 130 L 30 650 L 60 650" fill="none" stroke="#d97706" stroke-width="2" stroke-dasharray="5,3" />
+  <circle cx="55" cy="130" r="4" fill="#d97706" />
+  <text x="40" y="125" class="cardinality">1</text>
+  <polyline points="50,643 60,650 50,657" fill="none" stroke="#d97706" stroke-width="2" />
+  <text x="40" y="665" class="cardinality">N</text>
+
+  <!-- departments (1) to assets (N) [dept_name] -->
+  <path d="M 830 135 L 720 135" fill="none" stroke="#475569" stroke-width="1.8" />
+  <circle cx="825" cy="135" r="4" fill="#475569" />
+  <text x="810" y="130" class="cardinality">1</text>
+  <polyline points="730,128 720,135 730,142" fill="none" stroke="#475569" stroke-width="2" />
+  <text x="735" y="130" class="cardinality">N</text>
+
+  <!-- categories (1) to assets (N) [category_name] -->
+  <path d="M 830 285 L 720 285" fill="none" stroke="#475569" stroke-width="1.8" />
+  <circle cx="825" cy="285" r="4" fill="#475569" />
+  <text x="810" y="280" class="cardinality">1</text>
+  <polyline points="730,278 720,285 730,292" fill="none" stroke="#475569" stroke-width="2" />
+  <text x="735" y="280" class="cardinality">N</text>
+
+</svg>
+</div>
+</body>
+</html>

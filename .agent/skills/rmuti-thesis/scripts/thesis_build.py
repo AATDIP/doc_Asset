@@ -70,8 +70,13 @@ def add_figure(doc, chapter, title):
     cell = box.rows[0].cells[0]
     ph = cell.paragraphs[0]
     ph.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    ph.paragraph_format.keep_with_next = True
-    ph.add_run(f"[ใส่รูป: {title}]")
+    seq_no = doc._seq.get("รูปที่", 0) + 1
+    fig_file = os.path.join(ROOT, "input", "figures", f"fig_{chapter}_{seq_no}.png")
+    if os.path.exists(fig_file):
+        run = ph.add_run()
+        run.add_picture(fig_file, width=Cm(13.8))
+    else:
+        ph.add_run(f"[ใส่รูป: {title}]")
     cell._seq = doc._seq
     add_caption(cell, "รูปที่", chapter, title, WD_ALIGN_PARAGRAPH.CENTER)
     doc.add_paragraph()

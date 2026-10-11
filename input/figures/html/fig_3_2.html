@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    background-color: #ffffff;
+    font-family: 'TH Sarabun New', 'TH SarabunPSK', 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.diagram-container {
+    background: #ffffff;
+    padding: 10px;
+    display: inline-block;
+}
+svg {
+    font-family: 'TH Sarabun New', 'TH SarabunPSK', 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
+    overflow: visible;
+}
+.title { font-size: 20px; font-weight: bold; fill: #1e293b; text-anchor: middle; }
+.subtitle { font-size: 15px; fill: #64748b; text-anchor: middle; }
+.box-title { font-size: 16px; font-weight: bold; fill: #0f172a; text-anchor: middle; }
+.box-desc { font-size: 13.5px; fill: #334155; text-anchor: middle; }
+.badge { font-size: 12px; font-weight: bold; fill: #ffffff; }
+.label { font-size: 13px; font-weight: bold; fill: #475569; }
+.decision-text { font-size: 14.5px; font-weight: bold; fill: #1e293b; text-anchor: middle; }
+.tag-pk { fill: #dc2626; font-weight: bold; font-size: 12px; }
+.tag-fk { fill: #2563eb; font-weight: bold; font-size: 12px; }
+.col-name { font-size: 13.5px; fill: #1e293b; font-family: monospace; }
+.col-type { font-size: 12.5px; fill: #64748b; }
+
+</style>
+</head>
+<body>
+<div class="diagram-container">
+<svg width="780" height="880" viewBox="0 0 780 880" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08" />
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#2563eb" />
+    </marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#ef4444" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="390" y="32" class="title">รูปที่ 3.2 ผังงานกระบวนการนำเข้าข้อมูลสินทรัพย์ด้วยไฟล์ Excel</text>
+  <text x="390" y="54" class="subtitle">กระบวนการตรวจสอบโครงสร้างไฟล์ ตรวจสอบความถูกต้อง และบันทึกลงฐานข้อมูล</text>
+
+  <!-- Start -->
+  <rect x="300" y="75" width="180" height="38" rx="19" fill="#1e3a8a" filter="url(#shadow)" />
+  <text x="390" y="100" fill="#ffffff" font-size="16" font-weight="bold" text-anchor="middle">เริ่มต้น</text>
+  <line x1="390" y1="113" x2="390" y2="135" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 1 -->
+  <rect x="180" y="135" width="420" height="50" rx="8" fill="#f8fafc" stroke="#2563eb" stroke-width="1.8" filter="url(#shadow)" />
+  <text x="390" y="157" class="box-title">ผู้ดูแลระบบเข้าสู่เมนู "นำเข้าสินทรัพย์"</text>
+  <text x="390" y="174" class="box-desc">เข้าถึงหน้าจออัปโหลดไฟล์ตารางทำการผ่านแถบเมนูด้านข้าง</text>
+  <line x1="390" y1="185" x2="390" y2="207" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 2 -->
+  <polygon points="200,207 600,207 580,257 180,257" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8" filter="url(#shadow)" />
+  <text x="390" y="229" class="box-title">เลือกและอัปโหลดไฟล์ Excel (.xlsx)</text>
+  <text x="390" y="246" class="box-desc">ไฟล์ตารางทำการข้อมูลครุภัณฑ์จากแผนกพัสดุ</text>
+  <line x1="390" y1="257" x2="390" y2="279" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 3 -->
+  <rect x="180" y="279" width="420" height="50" rx="8" fill="#f8fafc" stroke="#2563eb" stroke-width="1.8" filter="url(#shadow)" />
+  <text x="390" y="301" class="box-title">ระบบอ่านข้อมูลและแปลงโครงสร้างไฟล์ (Parse Excel Data)</text>
+  <text x="390" y="318" class="box-desc">สกัดข้อมูลหัวคอลัมน์และแถวข้อมูลในสเปรดชีต</text>
+  <line x1="390" y1="329" x2="390" y2="351" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Decision 1 -->
+  <polygon points="390,351 530,396 390,441 250,396" fill="#fef3c7" stroke="#d97706" stroke-width="1.8" filter="url(#shadow)" />
+  <text x="390" y="392" class="decision-text">ชนิดไฟล์และหัวตาราง</text>
+  <text x="390" y="410" class="decision-text">ถูกต้องครบถ้วนหรือไม่?</text>
+
+  <!-- Decision 1 Fail (Right) -->
+  <text x="540" y="390" fill="#ef4444" font-size="13.5" font-weight="bold">ไม่ถูกต้อง</text>
+  <polyline points="530,396 660,396 660,232 605,232" fill="none" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="5,3" marker-end="url(#arrow-red)" />
+  <rect x="580" y="340" width="150" height="40" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5" />
+  <text x="655" y="357" fill="#b91c1c" font-size="12.5" font-weight="bold" text-anchor="middle">แจ้งเตือนข้อผิดพลาด</text>
+  <text x="655" y="372" fill="#b91c1c" font-size="11.5" text-anchor="middle">โครงสร้างหัวตารางไม่ตรง</text>
+
+  <!-- Decision 1 Pass (Down) -->
+  <text x="405" y="460" fill="#059669" font-size="13.5" font-weight="bold">ถูกต้อง</text>
+  <line x1="390" y1="441" x2="390" y2="475" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 4 -->
+  <rect x="180" y="475" width="420" height="50" rx="8" fill="#f8fafc" stroke="#2563eb" stroke-width="1.8" filter="url(#shadow)" />
+  <text x="390" y="497" class="box-title">ระบบตรวจสอบความถูกต้องของข้อมูลแต่ละแถว (Validation)</text>
+  <text x="390" y="514" class="box-desc">ตรวจสอบรหัสสินทรัพย์ วันที่ รูปแบบข้อความ และค่าว่างที่ไม่อนุญาต</text>
+  <line x1="390" y1="525" x2="390" y2="547" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Decision 2 -->
+  <polygon points="390,547 530,592 390,637 250,592" fill="#fef3c7" stroke="#d97706" stroke-width="1.8" filter="url(#shadow)" />
+  <text x="390" y="588" class="decision-text">ข้อมูลในแถว</text>
+  <text x="390" y="606" class="decision-text">ผ่านเกณฑ์ทั้งหมดหรือไม่?</text>
+
+  <!-- Decision 2 Fail (Right) -->
+  <text x="540" y="586" fill="#ef4444" font-size="13.5" font-weight="bold">พบข้อผิดพลาด</text>
+  <polyline points="530,592 660,592 660,650" fill="none" stroke="#ef4444" stroke-width="1.8" />
+  <rect x="580" y="650" width="160" height="45" rx="6" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5" />
+  <text x="660" y="669" fill="#b91c1c" font-size="12.5" font-weight="bold" text-anchor="middle">แสดงรายการแถวที่ผิดพลาด</text>
+  <text x="660" y="684" fill="#b91c1c" font-size="11.5" text-anchor="middle">ยกเลิกการนำเข้าแถวนั้น</text>
+  <polyline points="660,695 660,780 485,780" fill="none" stroke="#64748b" stroke-width="1.8" marker-end="url(#arrow)" />
+
+  <!-- Decision 2 Pass (Down) -->
+  <text x="405" y="656" fill="#059669" font-size="13.5" font-weight="bold">ถูกต้อง</text>
+  <line x1="390" y1="637" x2="390" y2="667" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 5 -->
+  <rect x="180" y="667" width="420" height="48" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.8" filter="url(#shadow)" />
+  <text x="390" y="688" class="box-title">บันทึกข้อมูลสินทรัพย์ลงฐานข้อมูล MySQL (ตาราง assets)</text>
+  <text x="390" y="704" class="box-desc">แทรกข้อมูลสินทรัพย์ใหม่หรืออัปเดตข้อมูลที่มีอยู่เดิม</text>
+  <line x1="390" y1="715" x2="390" y2="735" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 6 -->
+  <rect x="180" y="735" width="420" height="46" rx="8" fill="#f8fafc" stroke="#2563eb" stroke-width="1.8" filter="url(#shadow)" />
+  <text x="390" y="754" class="box-title">บันทึกประวัติลงตาราง activity_logs</text>
+  <text x="390" y="770" class="box-desc">ระบุรหัสผู้ใช้งาน โมดูล Assets การกระทำ Import และรายละเอียด</text>
+  <line x1="390" y1="781" x2="390" y2="801" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 7 -->
+  <polygon points="200,801 600,801 580,839 180,839" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8" filter="url(#shadow)" />
+  <text x="390" y="821" class="box-title">แสดงผลสรุปยอดนำเข้าสำเร็จ และรีเฟรชตารางสินทรัพย์</text>
+  <line x1="390" y1="839" x2="390" y2="855" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- End -->
+  <rect x="300" y="855" width="180" height="34" rx="17" fill="#1e3a8a" filter="url(#shadow)" />
+  <text x="390" y="877" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle">สิ้นสุด</text>
+</svg>
+</div>
+</body>
+</html>

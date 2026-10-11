@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<style>
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    background-color: #ffffff;
+    font-family: 'TH Sarabun New', 'TH SarabunPSK', 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.diagram-container {
+    background: #ffffff;
+    padding: 10px;
+    display: inline-block;
+}
+svg {
+    font-family: 'TH Sarabun New', 'TH SarabunPSK', 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
+    overflow: visible;
+}
+.title { font-size: 20px; font-weight: bold; fill: #1e293b; text-anchor: middle; }
+.subtitle { font-size: 15px; fill: #64748b; text-anchor: middle; }
+.box-title { font-size: 16px; font-weight: bold; fill: #0f172a; text-anchor: middle; }
+.box-desc { font-size: 13.5px; fill: #334155; text-anchor: middle; }
+.badge { font-size: 12px; font-weight: bold; fill: #ffffff; }
+.label { font-size: 13px; font-weight: bold; fill: #475569; }
+.decision-text { font-size: 14.5px; font-weight: bold; fill: #1e293b; text-anchor: middle; }
+.tag-pk { fill: #dc2626; font-weight: bold; font-size: 12px; }
+.tag-fk { fill: #2563eb; font-weight: bold; font-size: 12px; }
+.col-name { font-size: 13.5px; fill: #1e293b; font-family: monospace; }
+.col-type { font-size: 12.5px; fill: #64748b; }
+
+</style>
+</head>
+<body>
+<div class="diagram-container">
+<svg width="780" height="920" viewBox="0 0 780 920" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08" />
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#3b82f6" />
+    </marker>
+    <marker id="arrow-loop" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#ef4444" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="390" y="32" class="title">รูปที่ 3.1 ขั้นตอนการวางแผนและดำเนินงานของโครงการ</text>
+  <text x="390" y="54" class="subtitle">ระเบียบวิธีพัฒนาซอฟต์แวร์แบบวนซ้ำและเพิ่มพูน (Iterative and Incremental Development)</text>
+
+  <!-- Start -->
+  <rect x="290" y="75" width="200" height="42" rx="21" fill="#1e3a8a" filter="url(#shadow)" />
+  <text x="390" y="102" fill="#ffffff" font-size="16" font-weight="bold" text-anchor="middle">เริ่มต้นโครงการ</text>
+  <line x1="390" y1="117" x2="390" y2="145" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 1 -->
+  <rect x="150" y="145" width="480" height="74" rx="8" fill="#f8fafc" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)" />
+  <rect x="160" y="153" width="24" height="24" rx="12" fill="#3b82f6" />
+  <text x="172" y="170" fill="#ffffff" font-size="14" font-weight="bold" text-anchor="middle">1</text>
+  <text x="390" y="171" class="box-title">การศึกษาและรวบรวมความต้องการ (Requirement Gathering)</text>
+  <text x="390" y="196" class="box-desc">ศึกษาระบบงานเดิมของคณะแพทยศาสตร์ วิเคราะห์ปัญหา และกำหนดความต้องการ 2 ส่วนหลัก</text>
+  <line x1="390" y1="219" x2="390" y2="247" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 2 -->
+  <rect x="150" y="247" width="480" height="74" rx="8" fill="#f8fafc" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)" />
+  <rect x="160" y="255" width="24" height="24" rx="12" fill="#3b82f6" />
+  <text x="172" y="272" fill="#ffffff" font-size="14" font-weight="bold" text-anchor="middle">2</text>
+  <text x="390" y="273" class="box-title">การออกแบบระบบและฐานข้อมูล (System & Database Design)</text>
+  <text x="390" y="298" class="box-desc">ออกแบบสถาปัตยกรรมระบบ ฐานข้อมูล MySQL 7 ตารางหลัก แผนภาพ ERD และ Use Case</text>
+  <line x1="390" y1="321" x2="390" y2="349" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 3 -->
+  <rect x="150" y="349" width="480" height="74" rx="8" fill="#f8fafc" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)" />
+  <rect x="160" y="357" width="24" height="24" rx="12" fill="#3b82f6" />
+  <text x="172" y="374" fill="#ffffff" font-size="14" font-weight="bold" text-anchor="middle">3</text>
+  <text x="390" y="375" class="box-title">การออกแบบส่วนต่อประสานผู้ใช้ (UI/UX Design)</text>
+  <text x="390" y="400" class="box-desc">ออกแบบโครงสร้าง Partials ตารางแสดงผล 25 คอลัมน์ ธีมสีสว่าง/มืด และระบบสองภาษา</text>
+  <line x1="390" y1="423" x2="390" y2="451" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 4 -->
+  <rect x="150" y="451" width="480" height="74" rx="8" fill="#f8fafc" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)" />
+  <rect x="160" y="459" width="24" height="24" rx="12" fill="#3b82f6" />
+  <text x="172" y="476" fill="#ffffff" font-size="14" font-weight="bold" text-anchor="middle">4</text>
+  <text x="390" y="477" class="box-title">การพัฒนาระบบ (System Implementation)</text>
+  <text x="390" y="502" class="box-desc">พัฒนาส่วนติดต่อผู้ใช้ด้วย EJS, CSS, JS จัดการ Data Diff, โอนย้ายสินทรัพย์, QR Code และความปลอดภัย</text>
+  <line x1="390" y1="525" x2="390" y2="553" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Step 5 -->
+  <rect x="150" y="553" width="480" height="74" rx="8" fill="#f8fafc" stroke="#3b82f6" stroke-width="2" filter="url(#shadow)" />
+  <rect x="160" y="561" width="24" height="24" rx="12" fill="#3b82f6" />
+  <text x="172" y="578" fill="#ffffff" font-size="14" font-weight="bold" text-anchor="middle">5</text>
+  <text x="390" y="579" class="box-title">การทดสอบระบบ (System Testing)</text>
+  <text x="390" y="604" class="box-desc">ทดสอบความถูกต้องของฟังก์ชันการทำงาน ทดสอบการตอบสนองทุกขนาดหน้าจอ และการป้องกัน FOUC</text>
+  <line x1="390" y1="627" x2="390" y2="655" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Decision -->
+  <polygon points="390,655 520,705 390,755 260,705" fill="#fef3c7" stroke="#d97706" stroke-width="2" filter="url(#shadow)" />
+  <text x="390" y="700" class="decision-text">ผลการทดสอบ</text>
+  <text x="390" y="718" class="decision-text">ผ่านเกณฑ์หรือไม่?</text>
+
+  <!-- Pass branch (Down) -->
+  <text x="405" y="775" fill="#059669" font-size="14" font-weight="bold">ผ่าน (Yes)</text>
+  <line x1="390" y1="755" x2="390" y2="785" stroke="#059669" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- Fail branch (Loop Left) -->
+  <text x="180" y="695" fill="#ef4444" font-size="14" font-weight="bold">ไม่ผ่าน (No): ปรับปรุงแก้ไข</text>
+  <polyline points="260,705 90,705 90,488 145,488" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow-loop)" />
+
+  <!-- Step 6 -->
+  <rect x="150" y="785" width="480" height="66" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="2" filter="url(#shadow)" />
+  <rect x="160" y="793" width="24" height="24" rx="12" fill="#16a34a" />
+  <text x="172" y="810" fill="#ffffff" font-size="14" font-weight="bold" text-anchor="middle">6</text>
+  <text x="390" y="811" class="box-title">การปรับปรุงแก้ไขข้อบกพร่องและจัดทำเอกสาร (Refinement & Documentation)</text>
+  <text x="390" y="834" class="box-desc">ปรับปรุงแก้ไขข้อบกพร่อง จัดทำคู่มือการใช้งาน และสรุปผลการดำเนินงานของโครงการ</text>
+  <line x1="390" y1="851" x2="390" y2="875" stroke="#16a34a" stroke-width="2" marker-end="url(#arrow)" />
+
+  <!-- End -->
+  <rect x="290" y="875" width="200" height="40" rx="20" fill="#1e3a8a" filter="url(#shadow)" />
+  <text x="390" y="901" fill="#ffffff" font-size="16" font-weight="bold" text-anchor="middle">สิ้นสุดโครงการ</text>
+</svg>
+</div>
+</body>
+</html>
