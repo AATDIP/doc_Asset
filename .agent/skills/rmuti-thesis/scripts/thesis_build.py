@@ -191,6 +191,9 @@ def build_doc(lines):
     while i < len(merged):
         line = merged[i]
         i += 1
+        if line == "@pagebreak":
+            doc.add_page_break()
+            continue
         if line.startswith("@fig "):
             add_figure(doc, chapter, line[5:].strip())
             continue
