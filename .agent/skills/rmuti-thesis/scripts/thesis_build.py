@@ -39,7 +39,7 @@ TEMPLATE = os.path.join(ROOT, "input", "reference", "rmuti_thesis_template.docx"
 NUM_RE = re.compile(r"^(\d+(?:\.\d+)+)\s+")
 LIST_RE = re.compile(r"^\d+\)\s")
 # column widths (cm) by column count; text width is 14.65 cm
-COL_CM = {2: [4.6, 10.05], 3: [2.2, 5.6, 6.85], 4: [3.6, 2.9, 4.7, 3.45]}
+COL_CM = {2: [4.6, 10.05], 3: [2.2, 5.6, 6.85], 4: [3.6, 2.9, 4.7, 3.45], 5: [5.8, 1.8, 1.5, 1.5, 4.05]}
 
 
 def add_caption(container, label, chapter, text, align):
@@ -64,23 +64,17 @@ def add_caption(container, label, chapter, text, align):
 
 
 def add_figure(doc, chapter, title):
-    box = doc.add_table(rows=1, cols=1)
-    box.style = "Table Grid"
-    trPr = box.rows[0]._tr.get_or_add_trPr()
-    trPr.append(OxmlElement("w:cantSplit"))  # picture and caption stay on one page
-    cell = box.rows[0].cells[0]
-    ph = cell.paragraphs[0]
-    ph.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    ph.paragraph_format.keep_with_next = True
+    p_img = doc.add_paragraph()
+    p_img.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p_img.paragraph_format.keep_with_next = True
     seq_no = doc._seq.get("รูปที่", 0) + 1
     fig_file = os.path.join(ROOT, "input", "figures", f"fig_{chapter}_{seq_no}.png")
     if os.path.exists(fig_file):
-        run = ph.add_run()
+        run = p_img.add_run()
         run.add_picture(fig_file, width=Cm(13.8))
     else:
-        ph.add_run(f"[ใส่รูป: {title}]")
-    cell._seq = doc._seq
-    add_caption(cell, "รูปที่", chapter, title, WD_ALIGN_PARAGRAPH.CENTER)
+        p_img.add_run(f"[ใส่รูป: {title}]")
+    add_caption(doc, "รูปที่", chapter, title, WD_ALIGN_PARAGRAPH.CENTER)
     doc.add_paragraph()
 
 
@@ -100,15 +94,25 @@ def add_data_table(doc, chapter, title, rows, is_cont=False, has_blank_after=Tru
     t.style = "Table Grid"
     widths = COL_CM.get(ncol)
     for i, row in enumerate(cells):
+        is_last_row = (i == len(cells) - 1)
         for j in range(ncol):
             cell = t.rows[i].cells[j]
             if widths:
                 cell.width = Cm(widths[j])
             p = cell.paragraphs[0]
-            p.alignment = WD_ALIGN_PARAGRAPH.CENTER if i == 0 else WD_ALIGN_PARAGRAPH.LEFT
+            if i == 0:
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            elif ncol == 5 and j in (1, 2, 3):
+                p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            else:
+                p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+            if not is_last_row:
+                p.paragraph_format.keep_with_next = True
             p.add_run(row[j] if j < len(row) else "")
-    trPr = t.rows[0]._tr.get_or_add_trPr()  # repeat header row on each page
-    trPr.append(OxmlElement("w:tblHeader"))
+    for row in t.rows:
+        trPr = row._tr.get_or_add_trPr()
+        trPr.append(OxmlElement("w:cantSplit"))
+    t.rows[0]._tr.get_or_add_trPr().append(OxmlElement("w:tblHeader"))
     if has_blank_after:
         doc.add_paragraph()
 
@@ -233,7 +237,9 @@ def build_doc(lines):
             p.paragraph_format.keep_with_next = (" " not in NUM_RE.sub("", line)) or (i < len(merged) and merged[i].startswith(("@table", "@fig")))
             under_item = True
         else:
-            doc.add_paragraph(("\t\t" if under_item else "\t") + line)
+            p = doc.add_paragraph(("\t\t" if under_item else "\t") + line)
+            if (i < len(merged) and merged[i].startswith(("@table", "@fig"))) or line.endswith(("ดังนี้", "ดังนี้:", "ดังต่อไปนี้")):
+                p.paragraph_format.keep_with_next = True
     for p in all_paragraphs(doc):
         for r in p.runs:
             mark_thai(r)
